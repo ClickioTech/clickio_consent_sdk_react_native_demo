@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "385449847483",
+    "project_id": "fir-clickio",
+    "storage_bucket": "fir-clickio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385449847483:android:405f3a3870341823b3179e",
+        "android_client_info": {
+          "package_name": "com.firebase.clickio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcP6tO18BgxCUbTeWhHm2fQrcVhvPbg9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
