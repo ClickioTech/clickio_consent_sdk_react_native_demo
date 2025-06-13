@@ -36,7 +36,7 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
     "react-native-adjust": "^5.1.0",
-    "react-native-clickio-sdk": "github:reactNDeveloper/react-native-clickio-sdk",
+    "react-native-clickio-sdk": "github:ClickioTech/clickio_consent_sdk_react_native",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
