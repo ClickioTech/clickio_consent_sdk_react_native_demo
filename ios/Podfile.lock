@@ -2270,7 +2270,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   react-native-clickio-sdk:
-    :commit: aea532c10d075a67435774d9dada8860ab9aea78
+    :commit: f5ec85c259cff66229995a90a3afdf2857408a7b
     :git: https://github.com/reactNDeveloper/react-native-clickio-sdk.git
 
 SPEC CHECKSUMS:

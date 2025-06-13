@@ -19,10 +19,12 @@ import {
   isAirbridgeAvailable,
   isAppsFlyerAvailable,
   startLoggingLogsFromAndroid,
+  resetAppData,
+  onReady,
 } from "react-native-clickio-sdk";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const { ClickioConsentManagerModule } = NativeModules;
+const { ClickioConsentManagerModule, ClickioSDKModule } = NativeModules;
 
 export default function HomeScreen() {
   const [exportData, setExportData] = useState<{ [key: string]: any } | null>(
@@ -31,15 +33,18 @@ export default function HomeScreen() {
   const [consentFlags, setConsentFlags] = useState<{
     [key: string]: any;
   } | null>(null);
+  const [dialogMode, setDialogMode] = useState<string>("DEFAULT");
 
-  const openConsentDialog = () => {
-    ClickioConsentManagerModule.openDialog((response) => {
-      if (response.status === "success") {
-        console.log("Consent dialog opened");
-      } else {
-        console.warn("Error opening dialog:", response.message);
-      }
-    });
+  useEffect(() => {
+    if (Platform.OS === "ios") {
+      initializeSDKIos();
+    } else {
+      handleInit("default");
+    }
+  }, []);
+
+  const openConsentDialog = async (dialogMode: string) => {
+    await ClickioConsentManagerModule.openDialog({ mode: dialogMode });
   };
 
   const initializeSDKIos = async () => {
@@ -50,15 +55,17 @@ export default function HomeScreen() {
         appLanguage: "en",
       });
       console.log("SDK initialized:", response);
-      openConsentDialog();
+      openConsentDialog("default");
     } catch (error) {
       console.error("Error initializing SDK (iOS):", error);
     }
   };
 
-  const handleInit = async () => {
+  const handleInit = async (mode: string) => {
     try {
-      await initializeSDK("241131", "en");
+      console.log("ass");
+      const res = await initializeSDK("241131", "en", mode);
+      console.log("resssss", res);
     } catch (e) {
       console.error("SDK Init Error:", e);
     }
@@ -97,6 +104,31 @@ export default function HomeScreen() {
       console.log(error);
     }
   };
+  const resetData = async () => {
+    if (Platform.OS === "ios") {
+      ClickioConsentManagerModule.resetData().then(() => {
+        initializeSDKIos();
+        // "SDK preferences cleared."
+        // Optionally re-initialize the SDK after reset
+      });
+    } else {
+      await resetAppData();
+      await ClickioSDKModule.onReady("resurface");
+    }
+  };
+
+  const handleResurface = async () => {
+    try {
+      if (Platform.OS === "ios") {
+        openConsentDialog("resurface");
+      } else {
+        await onReady("resurface");
+      }
+      setDialogMode("RESURFACE");
+    } catch (error) {
+      console.log("ready error", error);
+    }
+  };
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -110,14 +142,24 @@ export default function HomeScreen() {
       <Button
         title="Initialize SDK"
         onPress={() =>
-          Platform.OS === "android" ? handleInit() : initializeSDKIos()
+          Platform.OS === "android" ? handleInit("default") : initializeSDKIos()
         }
+      />
+      <Button
+        title={`Resurface Consent:now mode is ${dialogMode}`}
+        onPress={() => handleResurface()}
       />
       <Button
         title="Fetch Export Data"
         onPress={() =>
           Platform.OS === "android" ? fetchExportData() : fetchIosExportData()
         }
+      />
+      <Button
+        title="Reset app data"
+        onPress={() => {
+          resetData();
+        }}
       />
       <Button title="Fetch FLags" onPress={getFlags} />
       {exportData && (
